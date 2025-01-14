@@ -94,6 +94,12 @@ const Navigation = () => {
             >
               Ask Question
             </button>
+            <button
+              onClick={handleProfileClick}
+              className="p-3 rounded-full border border-zinc-700 hover:border-white hover:bg-zinc-800"
+            >
+              <User className="h-6 w-6 text-white" />
+            </button>
           </div>
         </div>
       )}

@@ -24,9 +24,6 @@ const HeroSection = () => {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           {/* Interactive Spline Section */}
           <div className="relative mb-12 h-[900px]">
-            {" "}
-            {/* Increased height */}
-            {/* Spline 3D Scene */}
             <Spline
               scene="https://prod.spline.design/1Ep7Rog88GVQ2aUd/scene.splinecode"
               className="w-full h-full"

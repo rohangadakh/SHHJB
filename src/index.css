@@ -51,3 +51,21 @@ body::-webkit-scrollbar-track {
 .bg-highlight {
   background-color: #27272a; /* Slightly lighter than background */
 }
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-animation 3s ease infinite;
+}
+

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bold, Italic, Code, Link2, X, Image as ImageIcon } from "lucide-react";
 import { ref, push, set } from "firebase/database";
 import { db } from "../firebase";
+import TextOptimization from "./TextOptimization"; // Import the TextOptimization component
 
 const predefinedTags = ["react", "javascript", "html", "css", "nodejs", "java"];
 
@@ -130,81 +131,87 @@ const AskQuestionSection = () => {
         <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
           Ask a Question
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="title" className="block text-lg font-semibold mb-2">
-              Question Title
+        <form onSubmit={handleSubmit} className="space-y-6 flex flex-wrap gap-6">
+          <div className="w-full md:w-2/3">
+            <div>
+              <label htmlFor="title" className="block text-lg font-semibold mb-2">
+                Question Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="What is your question?"
+                className="w-full p-4 bg-zinc-800 text-white rounded-3xl border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
+                required
+              />
+            </div>
+
+            <label htmlFor="body" className="block text-lg font-semibold">
+              Question Body
             </label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="What is your question?"
-              className="w-full p-4 bg-zinc-800 text-white rounded-3xl border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
-              required
-            />
+            <div className="mb-6 bg-zinc-800 rounded-3xl p-4 flex items-center space-x-4">
+              <button
+                type="button"
+                onClick={() => insertMarkdown("bold")}
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+              >
+                <Bold size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={() => insertMarkdown("italic")}
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+              >
+                <Italic size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={() => insertMarkdown("inlineCode")}
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+              >
+                <Code size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={() => insertMarkdown("link")}
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+              >
+                <Link2 size={20} />
+              </button>
+
+              <button
+                type="button"
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+                onClick={() => document.getElementById('image').click()}
+              >
+                <ImageIcon size={20} />
+              </button>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="hidden"
+              />
+               {/* Text Optimization Component placed to the right */}
+          <div className="w-full md:w-1/3">
+            <TextOptimization text={body} onOptimizedText={setBody} />
           </div>
+            </div>
 
-          <label htmlFor="body" className="block text-lg font-semibold">
-            Question Body
-          </label>
-          <div className="mb-6 bg-zinc-800 rounded-3xl p-4 flex items-center space-x-4">
-            <button
-              type="button"
-              onClick={() => insertMarkdown("bold")}
-              className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-            >
-              <Bold size={20} />
-            </button>
-            <button
-              type="button"
-              onClick={() => insertMarkdown("italic")}
-              className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-            >
-              <Italic size={20} />
-            </button>
-            <button
-              type="button"
-              onClick={() => insertMarkdown("inlineCode")}
-              className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-            >
-              <Code size={20} />
-            </button>
-            <button
-              type="button"
-              onClick={() => insertMarkdown("link")}
-              className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-            >
-              <Link2 size={20} />
-            </button>
-
-            <button
-              type="button"
-              className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-              onClick={() => document.getElementById('image').click()}
-            >
-              <ImageIcon size={20} />
-            </button>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-              className="hidden"
-            />
-          </div>
-
-          <div>
-            <textarea
-              id="body"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder="Describe your issue in detail"
-              rows="8"
-              className="w-full p-4 bg-zinc-800 text-white rounded-3xl border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
-              required
-            ></textarea>
+            <div>
+              <textarea
+                id="body"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder="Describe your issue in detail"
+                rows="8"
+                className="w-full p-4 bg-zinc-800 text-white rounded-3xl border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-white"
+                required
+              ></textarea>
+            </div>
           </div>
 
           <div>
