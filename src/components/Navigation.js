@@ -32,13 +32,12 @@ const Navigation = () => {
     <nav className="bg-zinc-950 border-b border-zinc-800 fixed w-full top-0 z-50 backdrop-blur-lg bg-opacity-80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
-          <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
+          <div className="flex items-center cursor-pointer rounded-full" onClick={handleLogoClick}>
             <img
-              src="https://www.snjb.org/images/form-snjb-logo-circle.png"
+              src="https://acschandwadcollege.com/visitors/layout_1/design/images/SNJB%20Logo.png"
               alt="SHHJB Logo"
-              className="h-10 w-10"
+              className="h-16 py-2"
             />
-            <span className="ml-3 text-2xl font-bold text-white">SHHJB</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/TrendingQuestions" className="text-zinc-400 hover:text-white transition-colors flex items-center space-x-2">

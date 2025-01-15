@@ -38,12 +38,12 @@ const AskQuestionSection = () => {
     }
 
     const formData = new FormData();
-    formData.append("api_key", "d6715121b501828c633a60208462335e");
-    formData.append("file", image);
+    formData.append("key", "648f302b60e48ad1020b795ceed49a94"); // Replace with your ImageBB API key
+    formData.append("image", image);
 
     try {
       setUploading(true);
-      const response = await fetch("https://api.imghippo.com/v1/upload", {
+      const response = await fetch("https://api.imgbb.com/1/upload", {
         method: "POST",
         body: formData,
       });
@@ -52,9 +52,9 @@ const AskQuestionSection = () => {
       setUploading(false);
 
       if (data.success) {
-        return data.data.url;
+        return data.data.url; // Returns the URL of the uploaded image
       } else {
-        console.error("Image upload failed:", data.message);
+        console.error("Image upload failed:", data.error.message);
         alert("Failed to upload image. Please try again.");
         return null;
       }
@@ -131,10 +131,16 @@ const AskQuestionSection = () => {
         <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
           Ask a Question
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6 flex flex-wrap gap-6">
-          <div className="w-full md:w-2/3">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 flex flex-wrap gap-6"
+        >
+          <div className="w-full">
             <div>
-              <label htmlFor="title" className="block text-lg font-semibold mb-2">
+              <label
+                htmlFor="title"
+                className="block text-lg font-semibold mb-2"
+              >
                 Question Title
               </label>
               <input
@@ -148,7 +154,10 @@ const AskQuestionSection = () => {
               />
             </div>
 
-            <label htmlFor="body" className="block text-lg font-semibold">
+            <label
+              htmlFor="body"
+              className="block text-lg mt-4 mb-3 font-semibold"
+            >
               Question Body
             </label>
             <div className="mb-6 bg-zinc-800 rounded-3xl p-4 flex items-center space-x-4">
@@ -184,7 +193,7 @@ const AskQuestionSection = () => {
               <button
                 type="button"
                 className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
-                onClick={() => document.getElementById('image').click()}
+                onClick={() => document.getElementById("image").click()}
               >
                 <ImageIcon size={20} />
               </button>
@@ -195,10 +204,9 @@ const AskQuestionSection = () => {
                 onChange={(e) => setImage(e.target.files[0])}
                 className="hidden"
               />
-               {/* Text Optimization Component placed to the right
-          <div className="w-full md:w-1/3">
-            <TextOptimization text={body} onOptimizedText={setBody} />
-          </div> */}
+              <div className="w-full">
+                <TextOptimization text={body} onOptimizedText={setBody} />
+              </div>
             </div>
 
             <div>

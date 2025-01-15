@@ -9,8 +9,10 @@ const ProfilePage = () => {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [image, setImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -66,29 +68,63 @@ const ProfilePage = () => {
   };
 
   const handleSaveProfile = async () => {
-    const userRef = ref(db, `users/${username}/profile`);
-    try {
-      await set(userRef, {
-        bio,
-        avatar: imageUrl,
-      });
-
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error saving profile:", error);
+    const uploadedUrl = await handleImageUpload();
+    if (uploadedUrl) {
+      const userRef = ref(db, `users/${username}/profile`);
+      try {
+        await set(userRef, {
+          bio,
+          avatar: uploadedUrl,
+        });
+        setImageUrl(uploadedUrl);
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Error saving profile:", error);
+      }
     }
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImageUrl(reader.result); // Update image preview
-      };
-      reader.readAsDataURL(file);
+      setImage(file); // Set the file for upload
     }
   };
+
+  const handleImageUpload = async () => {
+    if (!image) {
+      alert("Please select an image before uploading.");
+      return null;
+    }
+  
+    const formData = new FormData();
+    formData.append("key", "648f302b60e48ad1020b795ceed49a94"); // Replace with your ImageBB API key
+    formData.append("image", image);
+  
+    try {
+      setUploading(true);
+      const response = await fetch("https://api.imgbb.com/1/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+  
+      setUploading(false);
+  
+      if (data.success) {
+        return data.data.url;
+      } else {
+        console.error("Image upload failed:", data.error.message);
+        alert("Failed to upload image. Please try again.");
+        return null;
+      }
+    } catch (error) {
+      setUploading(false);
+      console.error("Error uploading image:", error);
+      alert("An error occurred during image upload.");
+      return null;
+    }
+  };  
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
