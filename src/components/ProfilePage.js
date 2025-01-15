@@ -22,8 +22,8 @@ const ProfilePage = () => {
         const snapshot = await get(userRef);
         if (snapshot.exists()) {
           const userData = snapshot.val();
-          setBio(userData.profile?.bio || ""); // Fetch from profile sub-node
-          setImageUrl(userData.profile?.avatar || ""); // Fetch from profile sub-node
+          setBio(userData.profile?.bio || "");
+          setImageUrl(userData.profile?.avatar || "");
         }
       };
 
@@ -41,7 +41,6 @@ const ProfilePage = () => {
           });
         }
 
-        // Sort questions by timestamp (most recent first)
         userQuestions.sort((a, b) => b.timestamp - a.timestamp);
         setQuestions(userQuestions);
       };
@@ -69,15 +68,25 @@ const ProfilePage = () => {
   const handleSaveProfile = async () => {
     const userRef = ref(db, `users/${username}/profile`);
     try {
-      // Update only the "profile" sub-node with bio and avatar
       await set(userRef, {
         bio,
         avatar: imageUrl,
       });
 
-      setIsEditing(false); // Exit editing mode
+      setIsEditing(false);
     } catch (error) {
       console.error("Error saving profile:", error);
+    }
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageUrl(reader.result); // Update image preview
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -92,14 +101,25 @@ const ProfilePage = () => {
         <div className="bg-zinc-950 p-6 rounded-3xl border border-gray-800 shadow-lg w-full lg:w-1/2">
           <div className="flex items-center gap-6">
             <div className="relative w-24 h-24 rounded-full border-2 border-white overflow-hidden">
-              <img
-                src={
-                  imageUrl ||
-                  "https://d2pas86kykpvmq.cloudfront.net/images/humans-3.0/portrait-2-p-500.png"
-                }
-                alt="Avatar"
-                className="w-full h-full object-cover"
-              />
+              <label htmlFor="imagePicker" className="cursor-pointer">
+                <img
+                  src={
+                    imageUrl ||
+                    "https://d2pas86kykpvmq.cloudfront.net/images/humans-3.0/portrait-2-p-500.png"
+                  }
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+                {isEditing && (
+                  <input
+                    id="imagePicker"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                )}
+              </label>
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-semibold">{username || "Guest"}</h2>
