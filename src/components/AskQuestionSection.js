@@ -195,10 +195,10 @@ const AskQuestionSection = () => {
                 onChange={(e) => setImage(e.target.files[0])}
                 className="hidden"
               />
-               {/* Text Optimization Component placed to the right */}
+               {/* Text Optimization Component placed to the right
           <div className="w-full md:w-1/3">
             <TextOptimization text={body} onOptimizedText={setBody} />
-          </div>
+          </div> */}
             </div>
 
             <div>

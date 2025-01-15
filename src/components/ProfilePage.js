@@ -22,8 +22,8 @@ const ProfilePage = () => {
         const snapshot = await get(userRef);
         if (snapshot.exists()) {
           const userData = snapshot.val();
-          setBio(userData.bio || "");
-          setImageUrl(userData.avatar || "");
+          setBio(userData.profile?.bio || ""); // Fetch from profile sub-node
+          setImageUrl(userData.profile?.avatar || ""); // Fetch from profile sub-node
         }
       };
 
@@ -67,12 +67,18 @@ const ProfilePage = () => {
   };
 
   const handleSaveProfile = async () => {
-    const userRef = ref(db, `users/${username}`);
-    await set(userRef, {
-      bio,
-      avatar: imageUrl,
-    });
-    setIsEditing(false); // Set editing to false after saving
+    const userRef = ref(db, `users/${username}/profile`);
+    try {
+      // Update only the "profile" sub-node with bio and avatar
+      await set(userRef, {
+        bio,
+        avatar: imageUrl,
+      });
+
+      setIsEditing(false); // Exit editing mode
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    }
   };
 
   const formatDate = (timestamp) => {
@@ -87,24 +93,16 @@ const ProfilePage = () => {
           <div className="flex items-center gap-6">
             <div className="relative w-24 h-24 rounded-full border-2 border-white overflow-hidden">
               <img
-                src={imageUrl || "https://d2pas86kykpvmq.cloudfront.net/images/humans-3.0/portrait-2-p-500.png"}
+                src={
+                  imageUrl ||
+                  "https://d2pas86kykpvmq.cloudfront.net/images/humans-3.0/portrait-2-p-500.png"
+                }
                 alt="Avatar"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-semibold">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-zinc-800 p-2 rounded-2xl w-full"
-                  />
-                ) : (
-                  username || "Guest"
-                )}
-              </h2>
+              <h2 className="text-2xl font-semibold">{username || "Guest"}</h2>
               <div className="mt-2">
                 {isEditing ? (
                   <textarea
@@ -113,7 +111,9 @@ const ProfilePage = () => {
                     className="w-full mt-2 p-3 bg-zinc-800 rounded-2xl"
                   />
                 ) : (
-                  <div className="text-gray-400 mt-2">{bio || "No bio available"}</div>
+                  <div className="text-gray-400 mt-2">
+                    {bio || "No bio available"}
+                  </div>
                 )}
               </div>
               <div className="flex gap-4 mt-4">
