@@ -88,8 +88,8 @@ const TagsPage = () => {
               onClick={() => toggleTagSelection(tag)}
               className={`px-4 py-2 rounded-xl border ${
                 selectedTags.includes(tag)
-                  ? "bg-blue-600 text-white"
-                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+                  ? "bg-white text-black translate-all duration-500"
+                  : "bg-zinc-900 text-white translate-all duration-500 hover:bg-zinc-800"
               } transition-colors`}
             >
               {tag}

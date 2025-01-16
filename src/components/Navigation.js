@@ -32,7 +32,7 @@ const Navigation = () => {
     <nav className="bg-zinc-950 border-b border-zinc-800 fixed w-full top-0 z-50 backdrop-blur-lg bg-opacity-80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
-          <div className="flex items-center cursor-pointer rounded-full" onClick={handleLogoClick}>
+          <div className="flex items-center gap-4 cursor-pointer rounded-full" onClick={handleLogoClick}>
             <img
               src="https://acschandwadcollege.com/visitors/layout_1/design/images/SNJB%20Logo.png"
               alt="SHHJB Logo"

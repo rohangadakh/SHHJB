@@ -66,7 +66,7 @@ const TrendingQuestions = () => {
         {questions.map((question) => (
           <div
             key={question.id}
-            className="bg-zinc-950 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-zinc-800 hover:border-zinc-700 cursor-pointer"
+            className="bg-zinc-950 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-zinc-800 hover:border-zinc-600 cursor-pointer"
             onClick={() => handleQuestionClick(question.id)}
           >
             <div className="flex items-start space-x-6">

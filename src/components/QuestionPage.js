@@ -55,7 +55,9 @@ const QuestionPage = () => {
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
-  const [user, setUser] = useState(localStorage.getItem("username") || "Anonymous");
+  const [user, setUser] = useState(
+    localStorage.getItem("username") || "Anonymous"
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,11 +74,12 @@ const QuestionPage = () => {
     get(answersRef).then((snapshot) => {
       if (snapshot.exists()) {
         const answersData = snapshot.val();
-        const loadedAnswers = Object.keys(answersData).map((key) => ({
-          id: key,
-          ...answersData[key],
-        }))
-        .reverse();
+        const loadedAnswers = Object.keys(answersData)
+          .map((key) => ({
+            id: key,
+            ...answersData[key],
+          }))
+          .reverse();
         setAnswers(loadedAnswers);
       }
     });
@@ -175,7 +178,7 @@ const QuestionPage = () => {
         <textarea
           value={newAnswer}
           onChange={(e) => setNewAnswer(e.target.value)}
-          className="w-full pl-3 py-3 border border-gray-700 rounded-2xl bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+          className="w-full pl-3 py-3 border border-gray-800 rounded-2xl bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
           placeholder="Add your answer..."
         />
         <button
@@ -187,39 +190,42 @@ const QuestionPage = () => {
         </button>
       </div>
 
-      <div className="mt-8 space-y-6">
-        {answers.map((answer) => (
-          <div
-            key={answer.id}
-            className="bg-zinc-900 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-zinc-800 hover:border-zinc-700"
-          >
-            {renderMarkdownWithCode(answer.text).map((part, index) =>
-              part.type === "code" ? (
-                <SyntaxHighlighter
-                  key={index}
-                  language="javascript"
-                  style={vscDarkPlus}
-                >
-                  {part.content}
-                </SyntaxHighlighter>
-              ) : (
-                <span
-                  key={index}
-                  dangerouslySetInnerHTML={{ __html: part.content }}
-                ></span>
-              )
-            )}
-            <div className="flex mt-4 items-center space-x-4">
-              <User className="text-zinc-400" />
-              <span className="font-semibold text-zinc-400">
-                {answer.username}
-              </span>
-              <span className="text-zinc-400 text-sm">
-                {new Date(answer.timePosted).toLocaleString()}
-              </span>
+      <div className="relative mt-8">
+        <div className="absolute left-6 top-0 h-full w-1 rounded-full bg-zinc-700"></div>
+        <div className="space-y-6 ml-10">
+          {answers.map((answer) => (
+            <div
+              key={answer.id}
+              className="bg-zinc-900 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-zinc-800 hover:border-zinc-600"
+            >
+              {renderMarkdownWithCode(answer.text).map((part, index) =>
+                part.type === "code" ? (
+                  <SyntaxHighlighter
+                    key={index}
+                    language="javascript"
+                    style={vscDarkPlus}
+                  >
+                    {part.content}
+                  </SyntaxHighlighter>
+                ) : (
+                  <span
+                    key={index}
+                    dangerouslySetInnerHTML={{ __html: part.content }}
+                  ></span>
+                )
+              )}
+              <div className="flex mt-4 items-center space-x-4">
+                <User className="text-zinc-400" />
+                <span className="font-semibold text-zinc-400">
+                  {answer.username}
+                </span>
+                <span className="text-zinc-400 text-sm">
+                  {new Date(answer.timePosted).toLocaleString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
