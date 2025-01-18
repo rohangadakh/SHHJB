@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Spline from "@splinetool/react-spline";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [SplineComponent, setSplineComponent] = useState(null);
+
+  useEffect(() => {
+    import("@splinetool/react-spline").then((module) => {
+      setSplineComponent(() => module.default);
+    });
+  }, []);
 
   const handleAskQuestion = () => {
-    // Check if the user is logged in
     const isLoggedIn = localStorage.getItem("isLogged") === "true";
 
     if (isLoggedIn) {
-      // Redirect to the Ask Question page if logged in
       navigate("/ask-question");
     } else {
-      // Redirect to the Login page if not logged in
       navigate("/login");
     }
   };
@@ -22,13 +25,17 @@ const HeroSection = () => {
     <div className="">
       <div className="bg-gradient-to-b from-zinc-950 to-black py-2 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          {/* Interactive Spline Section */}
           <div className="relative mb-12 h-[900px]">
-            <Spline
-              scene="https://prod.spline.design/1Ep7Rog88GVQ2aUd/scene.splinecode"
-              className="w-full h-full"
-            />
-            {/* Overlay Text */}
+            {SplineComponent ? (
+              <SplineComponent
+                scene="https://prod.spline.design/1Ep7Rog88GVQ2aUd/scene.splinecode"
+                className="w-full h-full"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-white bg-black">
+                Loading 3D Experience...
+              </div>
+            )}
             <div className="absolute px-2 inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
               <h1 className="text-4xl md:text-7xl font-bold leading-tight text-white">
                 Stuck on a <span className="text-white font-extrabold">coding error?</span>
@@ -48,7 +55,6 @@ const HeroSection = () => {
                 </button>
               </div>
             </div>
-            {/* Black Rectangle */}
             <div className="absolute bottom-0 left-0 w-full h-16 bg-black z-10"></div>
           </div>
         </div>

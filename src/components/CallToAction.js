@@ -1,6 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CallToAction = () => {
+  const navigate = useNavigate();
+
+  const handleSignUp = () => {
+    navigate("/signup");
+  };
+
   return (
     <div className="bg-gradient-to-b from-zinc-950 to-black text-white py-20 border-t border-zinc-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -10,7 +17,10 @@ const CallToAction = () => {
         <p className="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
           Join the community and share your knowledge with others!
         </p>
-        <button className="bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-zinc-200 transition-colors shadow-lg text-lg">
+        <button
+          onClick={handleSignUp}
+          className="bg-white text-black px-10 py-4 rounded-2xl font-semibold hover:bg-zinc-200 hover:scale-125 transition-transform duration-500 shadow-lg text-lg"
+        >
           Sign Up Now
         </button>
       </div>

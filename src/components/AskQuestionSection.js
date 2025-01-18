@@ -4,6 +4,8 @@ import { Bold, Italic, Code, Link2, X, Image as ImageIcon } from "lucide-react";
 import { ref, push, set } from "firebase/database";
 import { db } from "../firebase";
 import TextOptimization from "./TextOptimization"; // Import the TextOptimization component
+import { checkAbusiveLanguage } from "./BadLanguageChecker"; // Adjust the path as necessary
+import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 
 const predefinedTags = ["react", "javascript", "html", "css", "nodejs", "java"];
 
@@ -16,6 +18,7 @@ const AskQuestionSection = () => {
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
+  const [submitting, setSubmitting] = useState(false); // Add submitting state
 
   const handleTagInput = (e) => {
     if (e.key === "Enter" && currentTag.trim() !== "") {
@@ -78,12 +81,39 @@ const AskQuestionSection = () => {
     e.preventDefault();
 
     if (!username.trim()) {
-      alert("Please login to ask a question.");
+      toast.error("Please login to ask a question.");
+      navigate("/login");
       return;
     }
 
     if (tags.length === 0) {
-      alert("Please add at least one tag.");
+      toast.error("Please add at least one tag.");
+      return;
+    }
+
+    try {
+      setSubmitting(true); // Start loader
+      // Check for abusive language
+      const isTitleAbusive = await checkAbusiveLanguage(title);
+      if (isTitleAbusive) {
+        toast.error(
+          "Your question title contains abusive language and cannot be submitted."
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      const isBodyAbusive = await checkAbusiveLanguage(body);
+      if (isBodyAbusive) {
+        toast.error(
+          "Your question contains abusive language and cannot be submitted."
+        );
+        setSubmitting(false);
+        return;
+      }
+    } catch (error) {
+      toast.error(error.message);
+      setSubmitting(false);
       return;
     }
 
@@ -106,11 +136,13 @@ const AskQuestionSection = () => {
       const newQuestionRef = push(questionRef);
       await set(newQuestionRef, questionData);
 
-      alert("Question submitted successfully!");
+      toast.success("Question submitted successfully!");
       navigate("/");
     } catch (error) {
       console.error("Error submitting question:", error);
-      alert("Failed to submit question. Please try again.");
+      toast.error("Failed to submit question. Please try again.");
+    } finally {
+      setSubmitting(false); // Stop loader
     }
   };
 
@@ -192,10 +224,34 @@ const AskQuestionSection = () => {
 
               <button
                 type="button"
-                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600"
+                className="bg-zinc-700 text-white p-3 rounded-3xl hover:bg-zinc-600 relative"
                 onClick={() => document.getElementById("image").click()}
+                disabled={uploading}
               >
-                <ImageIcon size={20} />
+                {uploading ? (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <ImageIcon size={20} />
+                )}
               </button>
               <input
                 type="file"
@@ -204,6 +260,7 @@ const AskQuestionSection = () => {
                 onChange={(e) => setImage(e.target.files[0])}
                 className="hidden"
               />
+
               <div className="w-full">
                 <TextOptimization text={body} onOptimizedText={setBody} />
               </div>
@@ -230,13 +287,13 @@ const AskQuestionSection = () => {
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-full flex items-center"
+                  className="bg-blue-900 text-white px-4 py-2 rounded-full flex items-center"
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="ml-2 text-sm text-white hover:text-gray-900"
+                    className="ml-2 text-sm text-white hover:text-red-500"
                   >
                     <X size={14} />
                   </button>
@@ -250,10 +307,10 @@ const AskQuestionSection = () => {
                   key={tag}
                   type="button"
                   onClick={() => toggleTagSelection(tag)}
-                  className={`px-6 py-2 rounded-full text-white ${
+                  className={`px-6 py-2 rounded-3xl transition-colors duration-300 ${
                     tags.includes(tag)
-                      ? "bg-blue-600 hover:bg-blue-500"
-                      : "bg-zinc-700 hover:bg-zinc-600"
+                      ? "bg-white text-black hover:"
+                      : "border hover:bg-white hover:text-black"
                   }`}
                 >
                   {tag}
@@ -261,14 +318,40 @@ const AskQuestionSection = () => {
               ))}
             </div>
           </div>
-
           <div className="flex justify-center">
             <button
               type="submit"
-              disabled={uploading}
-              className="bg-white text-black px-8 py-4 rounded-3xl font-semibold hover:scale-110 transition-all shadow-lg"
+              disabled={uploading || submitting}
+              className="bg-white text-black px-8 py-4 rounded-3xl font-semibold hover:scale-110 transition-all shadow-lg flex items-center justify-center"
             >
-              {uploading ? "Uploading..." : "Submit Question"}
+              {submitting ? (
+                <div className="flex items-center space-x-3">
+                  {/* New Elegant Spinner */}
+                  <svg
+                    className="animate-spin h-6 w-6 text-blue-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span className="text-black font-medium">Submitting...</span>
+                </div>
+              ) : (
+                "Submit Question"
+              )}
             </button>
           </div>
         </form>
@@ -276,5 +359,4 @@ const AskQuestionSection = () => {
     </div>
   );
 };
-
 export default AskQuestionSection;

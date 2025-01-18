@@ -55,6 +55,7 @@ const QuestionPage = () => {
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
+  const [submittingAnswer, setSubmittingAnswer] = useState(false); // Added state
   const [user, setUser] = useState(
     localStorage.getItem("username") || "Anonymous"
   );
@@ -69,7 +70,7 @@ const QuestionPage = () => {
         navigate("/");
       }
     });
-
+  
     const answersRef = ref(db, "answers/" + id);
     get(answersRef).then((snapshot) => {
       if (snapshot.exists()) {
@@ -79,7 +80,7 @@ const QuestionPage = () => {
             id: key,
             ...answersData[key],
           }))
-          .reverse();
+          .sort((a, b) => new Date(b.timePosted) - new Date(a.timePosted)); // Sort by most recent
         setAnswers(loadedAnswers);
       }
     });
@@ -87,26 +88,30 @@ const QuestionPage = () => {
 
   const handleAnswerSubmit = () => {
     if (!newAnswer.trim()) return;
-
+  
+    setSubmittingAnswer(true);
+  
     const newAnswerRef = push(ref(db, "answers/" + id));
     const currentTime = new Date().toISOString();
-
+  
     update(newAnswerRef, {
       text: newAnswer,
       username: user,
       timePosted: currentTime,
-    }).then(() => {
-      setNewAnswer("");
-      setAnswers((prevAnswers) => [
-        ...prevAnswers,
-        {
-          id: newAnswerRef.key,
-          text: newAnswer,
-          timePosted: currentTime,
-          username: user,
-        },
-      ]);
-    });
+    })
+      .then(() => {
+        setNewAnswer("");
+        setAnswers((prevAnswers) => [
+          {
+            id: newAnswerRef.key,
+            text: newAnswer,
+            timePosted: currentTime,
+            username: user,
+          },
+          ...prevAnswers, 
+        ]);
+      })
+      .finally(() => setSubmittingAnswer(false));
   };
 
   if (!question) {
@@ -130,7 +135,7 @@ const QuestionPage = () => {
               <img
                 src={question.image}
                 alt="Question"
-                className="w-full rounded-xl mb-4"
+                className="w-full rounded-3xl mb-4"
               />
             )}
             <h1 className="text-2xl font-semibold text-white">
@@ -181,12 +186,43 @@ const QuestionPage = () => {
           className="w-full pl-3 py-3 border border-gray-800 rounded-2xl bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
           placeholder="Add your answer..."
         />
-        <button
+         <button
           onClick={handleAnswerSubmit}
-          className="mt-3 p-3 bg-white text-black rounded-2xl flex items-center justify-center"
+          disabled={submittingAnswer}
+          className={`mt-3 p-3 bg-white text-black rounded-2xl flex items-center justify-center ${
+            submittingAnswer ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition-all"
+          }`}
         >
-          <Send className="mr-2 font-bold" />
-          Submit Answer
+          {submittingAnswer ? (
+            <div className="flex items-center space-x-2">
+              <svg
+                className="animate-spin h-5 w-5 text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span className="font-medium">Submitting...</span>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Send className="mr-2 font-bold" />
+              Submit Answer
+            </div>
+          )}
         </button>
       </div>
 
