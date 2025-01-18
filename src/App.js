@@ -19,6 +19,7 @@ import TrendingQuestions from "./components/TrendingQuestions";
 import TagsPage from "./components/TagsPage";
 import TopContributors from "./components/TopContributors";
 import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const AppContent = () => {
   const { isAuthenticated } = useAuth(); // Authentication state
@@ -30,6 +31,7 @@ const AppContent = () => {
   return (
     <div className="flex flex-col min-h-screen bg-black">
       <Toaster position="top-center" reverseOrder={false} />
+      <SpeedInsights />
       {!isAuthPage && <Navbar />}
 
       <div className="flex-grow">
