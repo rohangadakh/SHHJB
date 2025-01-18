@@ -114,7 +114,7 @@ const Navigation = () => {
                   className="h-16 w-16 rounded-full object-cover"
                 />
               ) : (
-                <User className="h-6 w-6 p-2 text-white" />
+                <User className="h-8 w-8 p-1 text-white" />
               )}
               <h1 className="text-white text-2xl ml-4 font-semibold">{username || "Hellow User"}</h1>
             </button>
