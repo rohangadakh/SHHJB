@@ -37,10 +37,10 @@ const HeroSection = () => {
               </div>
             )}
             <div className="absolute px-2 inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-              <h1 className="text-4xl md:text-7xl font-bold leading-tight text-white">
-                Stuck on a <span className="text-white font-extrabold">coding error?</span>
+              <h1 className="text-4xl md:text-7xl font-bold leading-tight text-white title-text">
+                Stuck on a coding error?
               </h1>
-              <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl mt-4">
+              <p className="text-3xl md:text-2xl text-zinc-400 max-w-3xl mt-4">
                 Get help from your fellow students and experienced developers
               </p>
               <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 pointer-events-auto">
