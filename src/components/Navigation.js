@@ -114,9 +114,9 @@ const Navigation = () => {
                   className="h-16 w-16 rounded-full object-cover"
                 />
               ) : (
-                <User className="h-16 w-16 text-white" />
+                <User className="h-8 w-8 text-white" />
               )}
-              <h1 className="text-white text-2xl ml-4 font-semibold">{username || "Username not available"}</h1>
+              <h1 className="text-white text-2xl ml-4 font-semibold">{username || "Hellow User"}</h1>
             </button>
             <Link to="/TrendingQuestions" className="text-zinc-400 hover:text-white transition-colors flex items-center space-x-2 p-2">
               <Flame className="h-5 w-5" />

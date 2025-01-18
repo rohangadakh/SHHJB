@@ -17,12 +17,12 @@ const TextOptimization = ({ text, onOptimizedText }) => {
       const genAI = new GoogleGenerativeAI("AIzaSyBiNigM3zsxZ2Fl6Kjr6ea9PEMeozpqr6U");
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
-      const prompt = `Please check the following text for any abusive language. If any abusive language is detected, return the word 'true'. Do not include any offensive words in the response. If no abusive language is detected, do not return 'false'. Instead, do the following:
-      1. Optimize the question for clarity and ease of understanding.
-      2. Ensure that any relevant formatting (such as **bold**, *italic*, \`code\`, [link](https://example.com)) is preserved in the optimized text.
-      3. If any part of the text can be enhanced with markdown formatting for better readability, feel free to add it.
-      
-      Return the optimized question, preserving the markdown as it is: ${text}`;
+      const prompt = `Please review and optimize the following text for clarity and ease of understanding. Follow these instructions:
+  1. Ensure that any existing formatting, such as **bold**, *italic*, \`code\`, and [links](https://example.com), is preserved.
+  2. Enhance the readability of the text by adding appropriate markdown formatting where necessary.
+  
+  Return the revised text, keeping the original markdown formatting intact: ${text}`;
+
 
       const result = await model.generateContent(prompt);
 
