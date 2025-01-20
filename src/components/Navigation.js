@@ -58,6 +58,7 @@ const Navigation = () => {
               alt="SHHJB Logo"
               className="h-16 py-2"
             />
+            SHHJB Code Repository
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/TrendingQuestions" className="text-zinc-400 hover:text-white transition-colors flex items-center space-x-2">

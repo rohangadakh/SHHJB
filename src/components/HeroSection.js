@@ -24,7 +24,7 @@ const HeroSection = () => {
   return (
     <div className="">
       <div className="bg-gradient-to-b from-zinc-950 to-black py-2 border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8">
           <div className="relative mb-12 h-[900px]">
             {SplineComponent ? (
               <SplineComponent
