@@ -7,7 +7,7 @@ import TextOptimization from "./TextOptimization"; // Import the TextOptimizatio
 import { checkAbusiveLanguage } from "./BadLanguageChecker"; // Adjust the path as necessary
 import { toast } from "react-hot-toast"; // Import toast from react-hot-toast
 
-const predefinedTags = ["react", "javascript", "html", "css", "nodejs", "java"];
+const predefinedTags = ["react", "javascript", "html", "css", "nodejs", "java", "php", "angular", "laravel", "cors"];
 
 const AskQuestionSection = () => {
   const [title, setTitle] = useState("");

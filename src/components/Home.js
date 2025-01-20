@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Import motion
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Navigation from "./Navigation";
 import HeroSection from "./HeroSection";
@@ -8,14 +8,22 @@ import TrendingQuestions from "./TrendingQuestions";
 import CallToAction from "./CallToAction";
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    // Check if the user has visited before
+    return localStorage.getItem("hasVisited") !== "true";
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate loading for 3.5 seconds
-    const timer = setTimeout(() => setIsLoading(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isLoading) {
+      // Simulate loading for 3.5 seconds
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        localStorage.setItem("hasVisited", "true"); // Mark as visited
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   const handleQuestionClick = (question) => {
     navigate(`/question/${question.id}`);
@@ -41,8 +49,8 @@ const Home = () => {
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{
-                  duration: 3.5, // Duration in seconds
-                  ease: "easeInOut", // Smooth easing
+                  duration: 3.5,
+                  ease: "easeInOut",
                 }}
               />
             </div>
