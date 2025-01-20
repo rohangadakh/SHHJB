@@ -54,7 +54,7 @@ const Navigation = () => {
         <div className="flex justify-between h-20">
           <div className="flex items-center gap-4 cursor-pointer" onClick={handleLogoClick}>
             <img
-              src="https://acschandwadcollege.com/visitors/layout_1/design/images/SNJB%20Logo.png"
+              src="https://www.snjb.org/jain-gurukul/visitors/hm/design/images/logo-left.png"
               alt="SHHJB Logo"
               className="h-16 py-2"
             />
