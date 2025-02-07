@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const checkAbusiveLanguage = async (text) => {
   try {
-    const genAI = new GoogleGenerativeAI("AIzaSyBiNigM3zsxZ2Fl6Kjr6ea9PEMeozpqr6U");
+    const genAI = new GoogleGenerativeAI("AIzaSyADz_RxDNz92h1MkoBP7O_dsv8f3ZFx7I4");
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
     const prompt = `Check the following text for abusive language. Return "true" if abusive language is detected. Return "false" if no abusive language is detected. Text: "${text}"`;
