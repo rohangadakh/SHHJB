@@ -14,7 +14,7 @@ const TextOptimization = ({ text, onOptimizedText }) => {
     setAbusiveDetected(false);
 
     try {
-      const genAI = new GoogleGenerativeAI("AIzaSyADz_RxDNz92h1MkoBP7O_dsv8f3ZFx7I4");
+      const genAI = new GoogleGenerativeAI("AIzaSyAYjW9cI0AYEb-xaaWdesD1gx0kVFGZTBI");
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
       const prompt = `Please review and optimize the following text for clarity and ease of understanding. Follow these instructions:
