@@ -13,6 +13,7 @@ const TextOptimization = ({ text, onOptimizedText }) => {
     setAnimateBackground(true);
     setAbusiveDetected(false);
 
+    
     try {
       const genAI = new GoogleGenerativeAI("AIzaSyAYjW9cI0AYEb-xaaWdesD1gx0kVFGZTBI");
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
